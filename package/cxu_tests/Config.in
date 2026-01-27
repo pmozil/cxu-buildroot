@@ -1,0 +1,5 @@
+config BR2_PACKAGE_CXU_TEST
+	bool "cxu_test"
+	help
+	  'cxu_test' is a set of tests to validate whether the cxu_test
+	  works in the intended way.
