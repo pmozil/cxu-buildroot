@@ -5,7 +5,7 @@
 ################################################################################
 
 PYTHON3_VERSION_MAJOR = 3.14
-PYTHON3_VERSION = $(PYTHON3_VERSION_MAJOR).2
+PYTHON3_VERSION = $(PYTHON3_VERSION_MAJOR).3
 PYTHON3_SOURCE = Python-$(PYTHON3_VERSION).tar.xz
 PYTHON3_SITE = https://python.org/ftp/python/$(PYTHON3_VERSION)
 PYTHON3_LICENSE = Python-2.0, others
@@ -168,6 +168,12 @@ ifeq ($(BR2_PACKAGE_PYTHON3_ZLIB),y)
 PYTHON3_DEPENDENCIES += zlib
 else
 PYTHON3_CONF_ENV += py_cv_module_zlib=n/a
+endif
+
+ifeq ($(BR2_PACKAGE_PYTHON3_ZSTD),y)
+PYTHON3_DEPENDENCIES += zstd
+else
+PYTHON3_CONF_ENV += py_cv_module__zstd=n/a
 endif
 
 ifneq ($(BR2_PACKAGE_PYTHON3_OSSAUDIODEV),y)

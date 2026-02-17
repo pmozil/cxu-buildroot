@@ -1,0 +1,5 @@
+config BR2_PACKAGE_CXU_TFMICRO_DEMO
+	bool "cxu-tflite-demo"
+	depends on BR2_INSTALL_LIBSTDCPP
+	help
+	  A custom C++ AI application running inference via TFLite Micro.

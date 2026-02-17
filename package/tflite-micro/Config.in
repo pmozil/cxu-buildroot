@@ -1,0 +1,10 @@
+config BR2_PACKAGE_TFLITE_MICRO
+	bool "tflite-micro"
+	depends on BR2_INSTALL_LIBSTDCPP
+	help
+	  TensorFlow Lite for Microcontrollers.
+
+	  https://github.com/tensorflow/tflite-micro
+
+comment "tflite-micro needs a toolchain w/ C++"
+	depends on !BR2_INSTALL_LIBSTDCPP
