@@ -1,5 +1,5 @@
-# https://www.ruby-lang.org/en/news/2025/12/25/ruby-4-0-0-released/
-sha256  a72bacee9de07283ebc19baa4ac243b193129f21aa4e168c7186fb1fe7d07fe1  ruby-4.0.0.tar.xz
+# https://www.ruby-lang.org/en/news/2026/03/16/ruby-4-0-2-released/
+sha256  4618db85bb9ec04d8152d0099db488694a3d3c4f52106625e4ad547f1318db87  ruby-4.0.2.tar.xz
 
 # License files, Locally calculated
 sha256  a74812486cffbdc55141a5d9f165d782cbb202660d827622ec966237d4717b99  LEGAL
