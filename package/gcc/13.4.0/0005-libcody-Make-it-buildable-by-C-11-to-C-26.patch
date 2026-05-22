@@ -42,7 +42,7 @@ index ae69d190cb7..147fecdbe50 100644
  static Packet CommunicationError (int err)
  {
 -  std::string e {u8"communication error:"};
-+  std::string e {(const char *) u8"communication error:"};
++  std::string e {(const char *) "communication error:"};
    e.append (strerror (err));
  
    return Packet (Client::PC_ERROR, std::move (e));
@@ -51,29 +51,29 @@ index ae69d190cb7..147fecdbe50 100644
        if (e == EINVAL)
  	{
 -	  std::string msg (u8"malformed string '");
-+	  std::string msg ((const char *) u8"malformed string '");
++	  std::string msg ((const char *) "malformed string '");
  	  msg.append (words[0]);
 -	  msg.append (u8"'");
-+	  msg.append ((const char *) u8"'");
++	  msg.append ((const char *) "'");
  	  return Packet (Client::PC_ERROR, std::move (msg));
  	}
        else
 -	return Packet (Client::PC_ERROR, u8"missing response");
-+	return Packet (Client::PC_ERROR, (const char *) u8"missing response");
++	return Packet (Client::PC_ERROR, (const char *) "missing response");
      }
  
    Assert (!words.empty ());
 -  if (words[0] == u8"ERROR")
-+  if (words[0] == (const char *) u8"ERROR")
++  if (words[0] == (const char *) "ERROR")
      return Packet (Client::PC_ERROR,
 -		   words.size () == 2 ? words[1]: u8"malformed error response");
 +		   words.size () == 2 ? words[1]
-+		   : (const char *) u8"malformed error response");
++		   : (const char *) "malformed error response");
  
    if (isLast && !read.IsAtEnd ())
      return Packet (Client::PC_ERROR,
 -		   std::string (u8"unexpected extra response"));
-+		   std::string ((const char *) u8"unexpected extra response"));
++		   std::string ((const char *) "unexpected extra response"));
  
    Assert (code < Detail::RC_HWM);
    Packet result (responseTable[code] (words));
@@ -81,11 +81,11 @@ index ae69d190cb7..147fecdbe50 100644
    if (result.GetCode () == Client::PC_ERROR && result.GetString ().empty ())
      {
 -      std::string msg {u8"malformed response '"};
-+      std::string msg {(const char *) u8"malformed response '"};
++      std::string msg {(const char *) "malformed response '"};
  
        read.LexedLine (msg);
 -      msg.append (u8"'");
-+      msg.append ((const char *) u8"'");
++      msg.append ((const char *) "'");
        result.GetString () = std::move (msg);
      }
    else if (result.GetCode () == Client::PC_CONNECT)
@@ -94,7 +94,7 @@ index ae69d190cb7..147fecdbe50 100644
  {
    write.BeginLine ();
 -  write.AppendWord (u8"HELLO");
-+  write.AppendWord ((const char *) u8"HELLO");
++  write.AppendWord ((const char *) "HELLO");
    write.AppendInteger (Version);
    write.AppendWord (agent, true, alen);
    write.AppendWord (ident, true, ilen);
@@ -103,7 +103,7 @@ index ae69d190cb7..147fecdbe50 100644
  Packet ConnectResponse (std::vector<std::string> &words)
  {
 -  if (words[0] == u8"HELLO" && (words.size () == 3 || words.size () == 4))
-+  if (words[0] == (const char *) u8"HELLO"
++  if (words[0] == (const char *) "HELLO"
 +      && (words.size () == 3 || words.size () == 4))
      {
        char *eptr;
@@ -113,7 +113,7 @@ index ae69d190cb7..147fecdbe50 100644
  Packet PathnameResponse (std::vector<std::string> &words)
  {
 -  if (words[0] == u8"PATHNAME" && words.size () == 2)
-+  if (words[0] == (const char *) u8"PATHNAME" && words.size () == 2)
++  if (words[0] == (const char *) "PATHNAME" && words.size () == 2)
      return Packet (Client::PC_PATHNAME, std::move (words[1]));
  
    return Packet (Client::PC_ERROR, u8"");
@@ -122,7 +122,7 @@ index ae69d190cb7..147fecdbe50 100644
  Packet OKResponse (std::vector<std::string> &words)
  {
 -  if (words[0] == u8"OK")
-+  if (words[0] == (const char *) u8"OK")
++  if (words[0] == (const char *) "OK")
      return Packet (Client::PC_OK);
    else
      return Packet (Client::PC_ERROR,
@@ -131,14 +131,14 @@ index ae69d190cb7..147fecdbe50 100644
  Packet IncludeTranslateResponse (std::vector<std::string> &words)
  {
 -  if (words[0] == u8"BOOL" && words.size () == 2)
-+  if (words[0] == (const char *) u8"BOOL" && words.size () == 2)
++  if (words[0] == (const char *) "BOOL" && words.size () == 2)
      {
 -      if (words[1] == u8"FALSE")
 -	return Packet (Client::PC_BOOL, 0);
 -      else if (words[1] == u8"TRUE")
-+      if (words[1] == (const char *) u8"FALSE")
++      if (words[1] == (const char *) "FALSE")
 +	return Packet (Client::PC_BOOL);
-+      else if (words[1] == (const char *) u8"TRUE")
++      else if (words[1] == (const char *) "TRUE")
  	return Packet (Client::PC_BOOL, 1);
        else
  	return Packet (Client::PC_ERROR, u8"");
@@ -209,12 +209,12 @@ index e2fa069bb93..c18469fae84 100644
 -    RequestPair {u8"MODULE-IMPORT", ModuleImportRequest},
 -    RequestPair {u8"MODULE-COMPILED", ModuleCompiledRequest},
 -    RequestPair {u8"INCLUDE-TRANSLATE", IncludeTranslateRequest},
-+    RequestPair {(const char *) u8"HELLO", nullptr},
-+    RequestPair {(const char *) u8"MODULE-REPO", ModuleRepoRequest},
-+    RequestPair {(const char *) u8"MODULE-EXPORT", ModuleExportRequest},
-+    RequestPair {(const char *) u8"MODULE-IMPORT", ModuleImportRequest},
-+    RequestPair {(const char *) u8"MODULE-COMPILED", ModuleCompiledRequest},
-+    RequestPair {(const char *) u8"INCLUDE-TRANSLATE", IncludeTranslateRequest},
++    RequestPair {(const char *) "HELLO", nullptr},
++    RequestPair {(const char *) "MODULE-REPO", ModuleRepoRequest},
++    RequestPair {(const char *) "MODULE-EXPORT", ModuleExportRequest},
++    RequestPair {(const char *) "MODULE-IMPORT", ModuleImportRequest},
++    RequestPair {(const char *) "MODULE-COMPILED", ModuleCompiledRequest},
++    RequestPair {(const char *) "INCLUDE-TRANSLATE", IncludeTranslateRequest},
    };
  }
  
@@ -223,27 +223,27 @@ index e2fa069bb93..c18469fae84 100644
  
  	  if (err > 0)
 -	    msg = u8"error processing '";
-+	    msg = (const char *) u8"error processing '";
++	    msg = (const char *) "error processing '";
  	  else if (ix >= Detail::RC_HWM)
 -	    msg = u8"unrecognized '";
-+	    msg = (const char *) u8"unrecognized '";
++	    msg = (const char *) "unrecognized '";
  	  else if (IsConnected () && ix == Detail::RC_CONNECT)
 -	    msg = u8"already connected '";
-+	    msg = (const char *) u8"already connected '";
++	    msg = (const char *) "already connected '";
  	  else if (!IsConnected () && ix != Detail::RC_CONNECT)
 -	    msg = u8"not connected '";
-+	    msg = (const char *) u8"not connected '";
++	    msg = (const char *) "not connected '";
  	  else
 -	    msg = u8"malformed '";
-+	    msg = (const char *) u8"malformed '";
++	    msg = (const char *) "malformed '";
  
  	  read.LexedLine (msg);
 -	  msg.append (u8"'");
-+	  msg.append ((const char *) u8"'");
++	  msg.append ((const char *) "'");
  	  if (err > 0)
  	    {
 -	      msg.append (u8" ");
-+	      msg.append ((const char *) u8" ");
++	      msg.append ((const char *) " ");
  	      msg.append (strerror (err));
  	    }
  	  resolver->ErrorResponse (this, std::move (msg));
@@ -252,7 +252,7 @@ index e2fa069bb93..c18469fae84 100644
  
    if (words.size () == 3)
 -    words.emplace_back (u8"");
-+    words.emplace_back ((const char *) u8"");
++    words.emplace_back ((const char *) "");
    unsigned version = ParseUnsigned (words[1]);
    if (version == ~0u)
      return nullptr;
